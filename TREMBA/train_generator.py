@@ -7,12 +7,12 @@ import os
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import dataloader
+from .dataloader import *
 import numpy as np
-from FCN import *
-from utils import *
+from .FCN import *
+from .utils import *
 import torchvision.models as models
-from imagenet_model.Resnet import *
+from .imagenet_model.Resnet import *
 
 def train_tremba(state):
 
@@ -20,53 +20,55 @@ def train_tremba(state):
     print("Loaded device" , device)
     
     # Load Imagenet dataloaders
-    train_loader, test_loader, nlabels, mean, std = dataloader.imagenet(state, normalize=False)
-
+    train_loader, test_loader, nlabels, mean, std = imagenet(state)
+    print(f"Obtained train and test loaders")
+    
     nets = []
     
     model_dict = {
 
-        "resnet152": models.resnet152(pretrained=True),
-        "densenet121": models.densenet121(pretrained=True),
-        "densenet161": models.densenet161(pretrained=True),
-        "vgg16": models.vgg16(pretrained=True),
-        "inceptionv3": models.inception_v3(pretrained=True),
-        "googlenet": models.googlenet(pretrained=True),
-        "squeezenet": models.squeezenet1_1(pretrained=True),
-        "mnasnet": models.mnasnet1_0(pretrained=True),
-        "mobilenet_v2": models.mobilenet_v2(pretrained=True),
-        "resnet18": models.resnet18(pretrained=True),
-        "vgg19": models.vgg19_bn(pretrained=True),
-        "resnext101": models.resnext101_32x8d(pretrained=True),
+        "resnet152": models.resnet152,
+        "densenet121": models.densenet121,
+        # "densenet161": models.densenet161,
+        "vgg16": models.vgg16,
+        # "inceptionv3": models.inception_v3,
+        "googlenet": models.googlenet,
+        "squeezenet": models.squeezenet1_1,
+        # "mnasnet": models.mnasnet1_0,
+        "mobilenet_v2": models.mobilenet_v2,
+        "resnet18": models.resnet18,
+        # "vgg19": models.vgg19_bn,
+        # "resnext101": models.resnext101_32x8d,
     }
     
     # Get the test set size and number of batches
-    count = 0
-    total_length = 0
-    batch_length = 0
-    for batch_idx, a in enumerate(test_loader):
+    print("Obtaining test set size")
 
-        data = a[0]['data']
+    total_length = len(test_loader.dataset)
+    batch_length = len(test_loader)
+    # for batch_idx, a in enumerate(test_loader):
+
+    #     data = a[0]['data']
         
-        if count < 1:
-            batch_length += len(data)
+    #     if count < 1:
+    #         batch_length += len(data)
             
-        total_length += len(data)
-        count = count+1
-        
+    #     total_length += len(data)
+    #     count = count+1
+    
     print(f"Total test length: ", total_length)
     print(f"Total test batch length: ", batch_length)
-    test_loader.reset()
+    # test_loader.reset()
     
-    # Instantiate each model in the model list
+    # Instantiate each model in the model list (list of models to use in training ensemble)
     for model_name in state['model_list']:
-        print("Using model: ", model_name)
+        print("Loading ensemble model: ", model_name)
         
         if state["use_pretrained"]:
-            pretrained_model = model_dict[model_name.lower()]
+            pretrained_model = model_dict[model_name.lower()](pretrained=True)
         else:
             # pretrained_path = f"{state['retrained_cnn_path']}/imagenet_{model_name.lower()}_seed-{state['seed']}.ckpt"
-            net = model_dict[model_name.lower()]
+            net = model_dict[model_name.lower()](pretrained=True)
             net = torch.nn.DataParallel(net)
 
             net = nn.Sequential(
@@ -93,13 +95,16 @@ def train_tremba(state):
     model = torch.nn.DataParallel(model).cuda()#, state['gpuid'])
     
     # If target is given, change save path
-    if state['target']:
-        save_name = "Imagenet_{}{}_target_{}.pytorch".format("_".join(state['model_list']), state['target_class'])
-    else:
-        save_name = "Imagenet_{}{}_untarget.pytorch".format("_".join(state['model_list']))
-    
+    # if state['target']:
+    #     save_name = state['save_name']#"Imagenet_{}{}_target_{}.pytorch".format("_".join(state['model_list']), state['target_class'])
+    # else:
+    #     save_name = state['save_name']#"Imagenet_{}{}_untarget.pytorch".format("_".join(state['model_list']))
+
+    save_name = state['save_name']
+
     if state['pretrained_generator']:
         try:
+            # model.module.load_state_dict(torch.load(f"{state['generator_path']}/{save_name}"))
             model.module.load_state_dict(torch.load(f"{state['generator_path']}/{save_name}"))
             print("Loaded previous model weights successfully")
         except:
@@ -108,7 +113,7 @@ def train_tremba(state):
         
         model.cuda()#.to(device)
 
-    print(model)
+    # print(model)
 
     optimizer_G = torch.optim.SGD(model.parameters(), state['learning_rate_G'], momentum=state['momentum'],
                                 weight_decay=0, nesterov=True)
@@ -118,11 +123,17 @@ def train_tremba(state):
     hingeloss = MarginLoss(margin=state['margin'], target=state['target'])
     
     def train():
+
         model.train()
+        train_len = len(train_loader.dataset)
+        train_batches = len(train_loader)
+        print(f"There are {train_batches} number of batches.")
         #for batch_idx, (data, label) in enumerate(train_loader):
         for batch_idx, a in enumerate(train_loader):
-            data = a[0]['data']
-            label = a[0]['label']
+
+            # print(f"Batch {batch_idx} / {train_batches}")
+            data = a[0]#['data']
+            label = a[1]#['label']
             
             nat = data.cuda()#.to(device)
             
@@ -156,8 +167,8 @@ def train_tremba(state):
         for batch_idx, a in enumerate(test_loader):
         
 #             print(batch_idx, end=" ")
-            data = a[0]['data']
-            label = a[0]['label']
+            data = a[0]#['data']
+            label = a[1]#['label']
             
             nat = data.cuda()#to(device)
             if state['target']:
@@ -185,7 +196,8 @@ def train_tremba(state):
 
     best_success = 0.0
     for epoch in range(state['epochs']):
-        
+        print(f"Epoch {epoch}/{state['epochs']}")
+
         scheduler_G.step()
         state['epoch'] = epoch
         train()
