@@ -206,8 +206,8 @@ def train_tremba(state):
         if epoch % 1 == 0:
             with torch.no_grad():
                 test()
-        train_loader.reset()
-        test_loader.reset()
+        # train_loader.reset()
+        # test_loader.reset()
         
         print("epoch {}, Current success: {}, Best success: {}".format(epoch, state['test_success'], best_success))
         torch.save(model.module.state_dict(), os.path.join(f"{state['generator_path']}/", save_name))

@@ -22,11 +22,11 @@ for c in configs:
     read_path = os.path.join(config_path, c)
     with open(read_path, 'r') as reader:
         train_config = json.load(reader)
-
+    train_tremba(train_config)
 
 # %%
 
-asdf = train_tremba(train_config)
+# asdf = train_tremba(train_config)
 # %%
 
 #%%
