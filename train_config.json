@@ -1,0 +1,23 @@
+{
+    "gpuid": [0],
+    "model_list": ["vgg16", "resnet18", "mobilenet_v2", "googlenet"],
+    "use_pretrained": false,
+    "target": 207,
+    "generator_path": "TREMBA/generators",
+    "pretrained_generator": true,
+    "learning_rate_G": 0.01,
+    "momentum": 0.9,
+    "epochs": 500,
+    "schedule": [10, 20, 40],
+    "gamma": 0.5,
+
+
+    "margin": 200.0,
+    "epsilon": 0.03125,
+    "attack_target_classes": ["basketball", "golden retriever", "cab, hack, taxi, taxicab", "dough"],
+    "log_interval": 100,
+    
+    "data_train_path": "data/imagenette2/train",
+    "data_test_path": "data/imagenette2/val",
+    "batch_size": 16
+}
