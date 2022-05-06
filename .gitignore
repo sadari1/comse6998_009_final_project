@@ -1,4 +1,5 @@
 data/train/*
 data/val/*
+data/
 *.csv
 *.tgz
