@@ -2,7 +2,8 @@
 
 # Modified generator 
 
-import sys 
+import sys
+import time 
 import os
 import torch
 import torch.nn as nn
@@ -129,6 +130,7 @@ def train_tremba(state):
         train_batches = len(train_loader)
         print(f"There are {train_batches} number of batches.")
         #for batch_idx, (data, label) in enumerate(train_loader):
+        st = time.time()
         for batch_idx, a in enumerate(train_loader):
 
             # print(f"Batch {batch_idx} / {train_batches}")
@@ -154,7 +156,9 @@ def train_tremba(state):
                 loss_g.backward()
             optimizer_G.step()
             if (batch_idx + 1) % state['log_interval'] == 0:
-                print("batch {}, losses_g {}".format(batch_idx + 1, dict(zip(state['model_list'], losses_g))))
+                ed = time.time()
+                print("batch {}, time {}, losses_g {}".format(batch_idx + 1, ed-st, dict(zip(state['model_list'], losses_g))))
+                st = time.time()
 #             print(batch_idx, end=" ")
             
             
@@ -211,4 +215,7 @@ def train_tremba(state):
         
         print("epoch {}, Current success: {}, Best success: {}".format(epoch, state['test_success'], best_success))
         torch.save(model.module.state_dict(), os.path.join(f"{state['generator_path']}/", save_name))
+        with open(f"{state['generator_path']}/{save_name}_log.txt", 'w') as f:
+            f.write(f"{epoch}\n")
+
         print("Saved at", os.path.join(f"{state['generator_path']}/", save_name))
