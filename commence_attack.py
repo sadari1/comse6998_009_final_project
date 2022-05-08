@@ -407,7 +407,7 @@ for c in os.listdir(config_path):
 if __name__ == '__main__':
 
     config_path = "configs/attack"
-    config_name = os.listdir(config_path)[2]
+    # config_name = os.listdir(config_path)[2]
     config_name = os.path.join(config_path, config_name)
     with open(config_name, 'r') as reader:
         config = json.load(reader)
