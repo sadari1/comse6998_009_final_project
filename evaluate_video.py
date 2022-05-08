@@ -26,12 +26,7 @@ from video_caption_pytorch.misc import utils as utils
 #%%
 def evaluate(config):
 
-# cpath = 'configs/eval'
-# cname = os.listdir(cpath)[0]
-# cname = os.path.join(cpath, cname)
-# with open(cname, 'r') as reader:
-#     config = json.load(reader)
-
+    # Load all configs
 
     video_name = config["video_name"]
     conv_model = config["source_model"]
@@ -39,7 +34,6 @@ def evaluate(config):
     target_class = config["target"]
 
     TREMBA_path = config["generator_path"]
-    # TREMBA_config = f"attack_target_{target_class}.json"
 
     generator_name = config["generator_name"]
 
@@ -65,14 +59,7 @@ def evaluate(config):
     }
 
     model_name = conv_model
-    #     modelname = 'resnet152'
-    # modelname = 'vgg16'
-    # modelname = 'densenet121'
-    # modelname = 'googlenet'
-    # modelname = 'squeezenet'
-    # modelname = 'mobilenet'
-    # modelname = 'mnasnet'
-    # modelname = 'inceptionv3'
+
 
     # Append the extension to this depending on whether it is the npy arrays or if it is the video
     if not os.path.exists(config['results_dir']):
@@ -83,6 +70,8 @@ def evaluate(config):
     #     selection = 9
 
     #     target_class = 805
+
+    # Load S2VT model
 
     opt_path = config["opt_path"]
     # opt_file_path = f"{opt_path}{model_opt_name}/opt_info.json"
@@ -166,6 +155,7 @@ def evaluate(config):
     #     new_classifier = nn.Sequential(*list(conv_model.classifier.children())[:-1])
     #     conv_model.classifier = new_classifier
 
+    # Evaluate video and save results
     pd_array = []
     column_names = ["video_name", "source_model", "eval_model", "epsilon", "original_caption", "target", "adversarial_caption_np", "adversarial_caption_video"]
 

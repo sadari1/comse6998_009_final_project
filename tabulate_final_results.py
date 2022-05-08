@@ -4,6 +4,10 @@
 import pandas as pd 
 import os 
 #%%
+
+
+# Load scored results and tabulate them by source, eval models + epsilon + target and show success rates 
+
 root_path = 'results'
 results = [os.path.join(root, name)
 for root, dirs, files in os.walk(root_path)

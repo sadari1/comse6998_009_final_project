@@ -30,6 +30,8 @@ epsilons = [eps, 2*eps]
 # video_names * target_classes * epsilon * conv_model
 # %%
 headers = ['video_name', 'source_model', 'target', 'epsilon']
+
+# generate cartesian product combinations of video names, conv models, targets and epsilons
 cartesian_product = list(product(video_names, conv_model, target_classes, epsilons))
 
 # %%

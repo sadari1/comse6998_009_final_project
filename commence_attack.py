@@ -10,8 +10,6 @@ from torch.autograd import Variable
 import numpy as np
 import torch.optim as optim
 import PIL
-# from Attack_Models.CNN_Attack import Attack
-# import skvideo.io 
 import json 
 import torchvision.models as models
 import time
@@ -35,13 +33,12 @@ from video_caption_pytorch.misc import utils as utils
 
 
 def EmbedBA(function, encoder, decoder, image, label, config, latent=None):
-#     device = image.device
 
     if latent is None:
         latent = encoder(image.unsqueeze(0)).squeeze().view(-1)
     momentum = torch.zeros_like(latent)
     dimension = len(latent)
-    noise = torch.empty((dimension, config['sample_size'])).cuda()#, device=device)
+    noise = torch.empty((dimension, config['sample_size'])).cuda()
     origin_image = image.clone()
     last_loss = []
     lr = config['lr']
@@ -61,7 +58,7 @@ def EmbedBA(function, encoder, decoder, image, label, config, latent=None):
             break
         
         if bool(success.item()):
-            return True, perturbation#torch.clamp(image+perturbation, 0, 1)
+            return True, perturbation
 
         nn.init.normal_(noise)
         noise[:, config['sample_size']//2:] = -noise[:, :config['sample_size']//2]
@@ -71,7 +68,6 @@ def EmbedBA(function, encoder, decoder, image, label, config, latent=None):
 
         grad = torch.mean(losses.expand_as(noise) * noise, dim=1)
 
-        # if iter % config['log_interval'] == 0 and config['print_log']:
         if iter % config['log_interval'] == 0 :
             print("iteration: {} loss: {}, l2_deviation {}".format(iter, float(loss.item()), float(torch.norm(perturbation))))
 
@@ -85,7 +81,7 @@ def EmbedBA(function, encoder, decoder, image, label, config, latent=None):
                 lr = max(lr / config['lr_decay'], config['lr_min'])
             last_loss = []
 
-    return False, perturbation#origin_image
+    return False, perturbation
 
    
 def TREMBA_attack(tremba_dict):
@@ -130,11 +126,6 @@ def TREMBA_attack(tremba_dict):
 
 def main(config):
 
-#     config = json.load(open(opt["config"]))
-#     import os
-#     print(opt['gpuid'])
-#     os.environ['CUDA_VISIBLE_DEVICES'] = ','.join(str(opt['gpuid'])) if type(opt['gpuid']) is list else opt['gpuid']
-
     ####################################### LOAD CONFIG #######################################################
     # Load the configurations
 
@@ -150,7 +141,6 @@ def main(config):
     target_class = config["target"]
 
     TREMBA_path = config["generator_path"]
-    # TREMBA_config = f"attack_target_{target_class}.json"
 
     generator_name = config["generator_name"]
 
@@ -224,6 +214,7 @@ def main(config):
 
     #%%
 
+    # Batch original frames
     tf_img_fn = TransformImage()#ptm_utils.TransformImage(conv)
     load_img_fn = PIL.Image.fromarray
 
@@ -243,21 +234,7 @@ def main(config):
     #%%
     frames = torch.Tensor(frames).cuda().float()#.unsqueeze(0)
 
-    # try:
-    #     check= open(f"{TREMBA_path}/config/{TREMBA_config}")# as config_file
-    #     check.close()
-    # except:
-    #     import shutil
-    #     shutil.copy2(f"{TREMBA_path}/config/attack_target.json", f"{TREMBA_path}/config/{TREMBA_config}")
-            
-
-    # with open(f"{TREMBA_path}/config/{TREMBA_config}") as config_file:
-        # state = json.load(config_file)
-
     nlabels = 1000
-
-    # eps = 0.03125
-    #         eps = 0.0625
 
     # Load up the pretrained generator
     generator_path = f"{config['generator_path']}/{config['generator_name']}"
@@ -265,6 +242,7 @@ def main(config):
 
     print("Loaded generator")
     #%%
+
     # Get the encoder and decoder weights
     encoder_weight = {}
     decoder_weight = {}
@@ -322,7 +300,6 @@ def main(config):
         print("\n-------------------------------\nFrame number: ", f, end='\n')
 
         image = (create_batches(frames[f].unsqueeze(0), config["DIM"]) / 255.)
-    #         image.cuda()##.to(device)
 
         tremba_dict['image'] = image.squeeze(0).cuda()#[0].cuda()
 
@@ -366,6 +343,7 @@ def main(config):
         print("Save path already exists, skipping creation")
     #%%
 
+    # Save everything
     df = pd.DataFrame(pd_array, columns=column_names)
     csv_save_path = f"{save_path}_{config['epsilon']}_run_summary.csv"
     df.to_csv(csv_save_path, index=False)
