@@ -1,6 +1,6 @@
 #%%
 import skvideo
-skvideo.setFFmpegPath("C:\\Users\\suman\\ffmpeg\\ffmpeg-2022-05-04-git-0914e3a14a-full_build\\bin")
+skvideo.setFFmpegPath("/usr/bin")
 import skvideo.io 
 
 
@@ -397,9 +397,19 @@ def main(config):
 if __name__ == '__main__':
 
     config_path = "configs/attack"
-    for c in os.listdir(config_path):
-        config_name = os.path.join(config_path, c)
+    configs = os.listdir(config_path)
+    for c in range(len(configs)):
+        print(f"Config {c}/{len(configs)}")
+        cpath = configs[c]
+        
+            
+        config_name = os.path.join(config_path, cpath)
         with open(config_name, 'r') as reader:
             config = json.load(reader)
-
+        # if config['target'] == 701:
+        #     continue
+        if config['epsilon'] == 0.03125:
+            config['epsilon'] *= 2
+        if config['epsilon'] == 0.0625:
+            config['epsilon'] += 0.03125   
         main(config)

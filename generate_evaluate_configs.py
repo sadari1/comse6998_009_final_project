@@ -31,9 +31,9 @@ for c in os.listdir(attack_config_path):
         tmp_config['opt_path'] = f'eval_models/msvd_{em}/opt_info.json'
         tmp_config['eval_cnn'] = em 
         
-    save_to = os.path.join(save_path, c)
+        save_to = os.path.join(save_path, em + '_'+ c)
 
-    with open(save_to, 'w') as writer:
-        json.dump(tmp_config, writer)
+        with open(save_to, 'w') as writer:
+            json.dump(tmp_config, writer)
 
 # %%

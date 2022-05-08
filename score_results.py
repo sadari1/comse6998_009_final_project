@@ -6,14 +6,12 @@ import os
 from TREMBA.dataloader import imagenet
 from imagenet_labels import imagenet_labels
 from itertools import product 
-import nltk 
-nltk.download('stopwords')
+
 
 from sentence_transformers import SentenceTransformer, util
 model = SentenceTransformer('multi-qa-mpnet-base-dot-v1')
 
-from nltk.corpus import stopwords
-stoplist = set(stopwords.words('english'))
+
 
 
 #%%
@@ -26,13 +24,18 @@ results = [os.path.join(root, name)
 for root, dirs, files in os.walk(root_path)
 for name in files
 if name.endswith("eval_summary.csv")]
+
 #%%
 
 #### Determine all combinations of conv and eval models
 conv_models = []
 eval_models = []
 for r in results:
-    base_name = r.split("\\")[1]
+    if '/' in r:
+        base_name = r.split("/")[1]
+    else:
+        base_name = r.split("\\")[1]
+    
     conv_model = base_name.split("_")[0]
     eval_model = base_name.split(".")[1].split("_")[1]
 
@@ -88,7 +91,8 @@ for r in results:
     emb1 = model.encode(df['target'], convert_to_tensor=True)
     emb2 = model.encode(df['adversarial_caption_np'], convert_to_tensor=True)
     cos_sim = util.pytorch_cos_sim(emb1, emb2)
-    df['score'] = cos_sim.detach().cpu().numpy()
+    
+    df['score'] = np.diagonal(cos_sim.detach().cpu().numpy())
     df['success'] = df['score'].apply(lambda x: 1 if x >= success_threshold else 0)
 
     save_path = r[:-4] + "_scored.csv"
