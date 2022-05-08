@@ -7,6 +7,17 @@
     "generator_name": "" ,
     "model_list": ["vgg16", "resnet18", "mobilenet_v2", "googlenet"],
     "save_name": "",
+    "sample_size": 20,
+
+    "num_iters": 2500,
+    "sigma": 1.0,
+    "lr": 3.0,
+    "lr_min": 0.1,
+    "lr_decay": 2.0,
+    "momentum": 0.0,
+    "plateau_length": 30,
+    "plateau_overhead": 0.1,
+
 
     "margin": 5.0,
     "epsilon": 0.03125,
@@ -17,7 +28,6 @@
     "data_test_path": "data/imagenette2/val",
     "batch_size": 32,
 
-    "num_iters": 100,
 
     "video_path": "",
     "video_name": "",

@@ -1,4 +1,9 @@
 #%%
+import skvideo
+skvideo.setFFmpegPath("C:\\Users\\suman\\ffmpeg\\ffmpeg-2022-05-04-git-0914e3a14a-full_build\\bin")
+import skvideo.io 
+
+
 import matplotlib.pyplot as plt
 from torchvision import transforms
 from torch.autograd import Variable
@@ -6,8 +11,7 @@ import numpy as np
 import torch.optim as optim
 import PIL
 # from Attack_Models.CNN_Attack import Attack
-import skimage.io
-import skvideo.io 
+# import skvideo.io 
 import json 
 import torchvision.models as models
 import time
@@ -18,6 +22,7 @@ import pandas as pd
 import os
 from pretrainedmodels import utils as ptm_utils
 from pathlib import Path
+from utils import * 
 
 from video_caption_pytorch.models import EncoderRNN, DecoderRNN, S2VTAttModel, S2VTModel
 from video_caption_pytorch.dataloader import VideoDataset
@@ -26,6 +31,8 @@ from video_caption_pytorch.process_features import create_batches as create_batc
 from video_caption_pytorch.models.ConvS2VT import ConvS2VT
 from video_caption_pytorch.misc import utils as utils
 #%%
+
+
 
 def EmbedBA(function, encoder, decoder, image, label, config, latent=None):
 #     device = image.device
@@ -64,7 +71,8 @@ def EmbedBA(function, encoder, decoder, image, label, config, latent=None):
 
         grad = torch.mean(losses.expand_as(noise) * noise, dim=1)
 
-        if iter % config['log_interval'] == 0 and config['print_log']:
+        # if iter % config['log_interval'] == 0 and config['print_log']:
+        if iter % config['log_interval'] == 0 :
             print("iteration: {} loss: {}, l2_deviation {}".format(iter, float(loss.item()), float(torch.norm(perturbation))))
 
         momentum = config['momentum'] * momentum + (1-config['momentum'])*grad
@@ -130,11 +138,20 @@ def TREMBA_attack(tremba_dict):
 ####################################### LOAD CONFIG #######################################################
 # Load the configurations
 
+config_path = "configs/attack"
+config_name = os.listdir(config_path)[2]
+config_name = os.path.join(config_path, config_name)
+with open(config_name, 'r') as reader:
+    config = json.load(reader)
+
+#%%
+
+
 video_path = config["video_path"]
 
 video_name = config["video_name"]
 conv_model = config["source_model"]
-target_class = config["target_classes"]
+target_class = config["target"]
 
 TREMBA_path = config["generator_path"]
 # TREMBA_config = f"attack_target_{target_class}.json"
@@ -147,16 +164,19 @@ upper_frame = config["upper_frame"]
 eps = config["epsilon"]
 
 config["DIM"] = 224
+#%%
+
+
 # Append the extension to this depending on whether it is the npy arrays or if it is the video
 save_path = f"{config['adv_save_path']}/{conv_model}_{target_class}_{video_name}"
 
 csv_save_path = f"{save_path}_{config['epsilon']}_run_summary.csv"
 run_done = Path(csv_save_path)
-if  run_done.is_file():
-    print(f"\nRun already found at {csv_save_path}, starting eval")
-    evaluate(config)
+# if  run_done.is_file():
+#     print(f"\nRun already found at {csv_save_path}, starting eval")
+#     evaluate(config)
 
-
+#%%
 
 print("Loaded configs")
 
@@ -164,16 +184,18 @@ model_dict = {
 
     "resnet152": models.resnet152(pretrained=True),
     "densenet121": models.densenet121(pretrained=True),
-    "densenet161": models.densenet161(pretrained=True),
+    # "densenet161": models.densenet161(pretrained=True),
     "vgg16": models.vgg16(pretrained=True),
-    "vgg19": models.vgg19_bn(pretrained=True),
-    "inceptionv3": models.inception_v3(pretrained=True),
-    "googlenet": models.googlenet(pretrained=True),
-    "squeezenet": models.squeezenet1_1(pretrained=True),
-    "mnasnet": models.mnasnet1_0(pretrained=True),
-    "mobilenet_v2": models.mobilenet_v2(pretrained=True),
+    # "vgg19": models.vgg19_bn(pretrained=True),
+    # "inceptionv3": models.inception_v3(pretrained=True),
+    # "googlenet": models.googlenet(pretrained=True),
+    # "squeezenet": models.squeezenet1_1(pretrained=True),
+    # "mnasnet": models.mnasnet1_0(pretrained=True),
+    # "mobilenet_v2": models.mobilenet_v2(pretrained=True),
     # "nasnetalarge": pmodels.nasnetalarge(num_classes=1000, pretrained='imagenet'),
 }
+#%%
+
 
 ####################################### PRE-ATTACK CONFIGURATION ##############################################
 
@@ -185,6 +207,7 @@ lower_frame = lower_frame
 upper_frame = upper_frame  # len(frames)
 
 frames = frames[lower_frame:upper_frame]
+#%%
 
 conv = model_dict[conv_model]
 conv.eval()
@@ -193,7 +216,6 @@ conv.eval()
 mean = np.array([0.485, 0.456, 0.406])
 std = np.array([0.229, 0.224, 0.225])
     
-    
 conv_model = nn.Sequential(
         Normalize(mean, std),
         conv
@@ -201,11 +223,15 @@ conv_model = nn.Sequential(
 
 print("Got model")
 
+#%%
+
 tf_img_fn = TransformImage()#ptm_utils.TransformImage(conv)
 load_img_fn = PIL.Image.fromarray
 
 original = original_create_batches(frames_to_do=frames, batch_size=config["batch_size"], tf_img_fn=tf_img_fn,
                                     load_img_fn=load_img_fn)
+
+#%%
 
 # Get the original predictions
 with torch.no_grad():
@@ -214,76 +240,78 @@ with torch.no_grad():
     print("Original classes: ")
     for f in original_output:
         print(" {} ".format(np.argmax(np.round(f.detach().cpu().numpy()))), end='')
-
+        
+#%%
 frames = torch.Tensor(frames).cuda().float()#.unsqueeze(0)
 
-try:
-    check= open(f"{TREMBA_path}/config/{TREMBA_config}")# as config_file
-    check.close()
-except:
-    import shutil
-    shutil.copy2(f"{TREMBA_path}/config/attack_target.json", f"{TREMBA_path}/config/{TREMBA_config}")
+# try:
+#     check= open(f"{TREMBA_path}/config/{TREMBA_config}")# as config_file
+#     check.close()
+# except:
+#     import shutil
+#     shutil.copy2(f"{TREMBA_path}/config/attack_target.json", f"{TREMBA_path}/config/{TREMBA_config}")
         
-with open(f"{TREMBA_path}/config/{TREMBA_config}") as config_file:
-    state = json.load(config_file)
-    
-    nlabels = 1000
 
-    # eps = 0.03125
+# with open(f"{TREMBA_path}/config/{TREMBA_config}") as config_file:
+    # state = json.load(config_file)
+
+nlabels = 1000
+
+# eps = 0.03125
 #         eps = 0.0625
 
-    state['target_class'] = target_class
-    state['epsilon'] = config["eps"]
-    state['num_iters'] = config['num_iters']
-    state['margin'] = config['margin']
-    # Load up the pretrained generator
-    generator_path = f"{TREMBA_path}/G_weight/{generator_name}_target_{target_class}.pytorch"
-    weight = torch.load(generator_path)#.cuda()##, map_location=device)
+# Load up the pretrained generator
+generator_path = f"{config['generator_path']}/{config['generator_name']}"
+weight = torch.load(generator_path)#.cuda()##, map_location=device)
 
-    print("Loaded generator")
+print("Loaded generator")
+#%%
+# Get the encoder and decoder weights
+encoder_weight = {}
+decoder_weight = {}
+for key, val in weight.items():
+    if key.startswith('0.'):
+        encoder_weight[key[2:]] = val
+    elif key.startswith('1.'):
+        decoder_weight[key[2:]] = val
 
-    # Get the encoder and decoder weights
-    encoder_weight = {}
-    decoder_weight = {}
-    for key, val in weight.items():
-        if key.startswith('0.'):
-            encoder_weight[key[2:]] = val
-        elif key.startswith('1.'):
-            decoder_weight[key[2:]] = val
+encoder = Imagenet_Encoder()
+decoder = Imagenet_Decoder()
+encoder.load_state_dict(encoder_weight)
+decoder.load_state_dict(decoder_weight)
 
-    encoder = Imagenet_Encoder()
-    decoder = Imagenet_Decoder()
-    encoder.load_state_dict(encoder_weight)
-    decoder.load_state_dict(decoder_weight)
+encoder.cuda()##.to(device)
+encoder.eval()
+decoder.cuda()##.to(device)
+decoder.eval()
 
-    encoder.cuda()##.to(device)
-    encoder.eval()
-    decoder.cuda()##.to(device)
-    decoder.eval()
+print("Encoder, decoder loaded")
+#%%
 
-    print("Encoder, decoder loaded")
-    
-    F = Function(conv, config['batch_size'], state['margin'], nlabels, state['target'])
-    F.cuda()
-    
-    print("F function loaded")
+F = Function(conv, config['batch_size'], config['margin'], nlabels, config['target'])
+F.cuda()
 
-    if state['target']:
-        labels = state['target_class']
+print("F function loaded")
+#%%
+
+
+if config['target']:
+    labels = config['target']
 #         labels = torch.Tensor(np.array([labels])).cuda()
-    #function, encoder, decoder, image, label, config, latent=None
-    tremba_dict = {
-        "function": F,
-        "encoder": encoder,
-        "decoder": decoder,
-        "label": labels,
+#function, encoder, decoder, image, label, config, latent=None
+tremba_dict = {
+    "function": F,
+    "encoder": encoder,
+    "decoder": decoder,
+    "label": labels,
 
-        "config":state,
-        "latent":None,
-    }
+    "config":config,
+    "latent":None,
+}
     
 adversarial_images = []
 adversarial_frames = []
+#%%
 
 ####################################### ATTACK #######################################################
 
@@ -311,7 +339,8 @@ for f in range(len(frames)):
     row_array = [config["source_model"], video_name, config['epsilon'], f, target_class, stats["success"], stats["F_average_eval_count"], stats["success_rate"], ""]
                     
     pd_array.append(row_array)
-                    
+    break 
+
 print("Attack done")
 toc=  time.time()
 
@@ -320,7 +349,7 @@ time_row = [config["source_model"], video_name, config['epsilon'], f, target_cla
 
 pd_array.append(time_row)
 print(f"Attack took: {toc-tic} seconds")
-
+#%%
 ####################################### POST-ATTACK ##################################################
 
 adversarial_frames = np.concatenate(adversarial_frames, axis=0)
