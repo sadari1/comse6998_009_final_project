@@ -16,7 +16,7 @@ model = SentenceTransformer('multi-qa-mpnet-base-dot-v1')
 
 #%%
 
-success_threshold = 0.3
+success_threshold = 0.5
 
 ################## CONCAT ALL RESULTS ########
 root_path = 'results'
@@ -60,9 +60,15 @@ for c in combinations:
     eval_model = c[1]
     epsilon = c[2]
 
-    filter_statement = lambda x: conv_model in x and eval_model in x 
+    if conv_model == eval_model:
+        filter_statement = lambda x: (eval_model in x.replace(conv_model, "", 1)) and (epsilon in x)
+    else:
+        filter_statement = lambda x: (conv_model in x) and (eval_model in x) and (epsilon in x)
 
     filt = list(filter(filter_statement, results))
+    if len(filt) == 0:
+        continue 
+
     combined_result_path = f"{root_path}/{conv_model}_{eval_model}_{epsilon}results.csv"
     
     dataframes = [pd.read_csv(f) for f in filt]

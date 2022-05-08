@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video,score,success
+77iDIp40m9E_159_181.avi,vgg16,vgg16,0.03125,A monkey is doing karate,dog,A dog is sniffing a <UNK>,A dog is looking at a mirror,0.6418262,1
