@@ -24,9 +24,9 @@ eps = 0.03125
 
 video_names = os.listdir(video_path)
 # %%
-conv_model = ["densenet121", "resnet152", "vgg16"]
+conv_model = ["vgg16"]#["densenet121", "resnet152", "vgg16"]
 target_classes = [217, 566, 701]
-epsilons = [0.5*eps, eps, 2*eps]
+epsilons = [eps, 2*eps]
 # video_names * target_classes * epsilon * conv_model
 # %%
 headers = ['video_name', 'source_model', 'target', 'epsilon']

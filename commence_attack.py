@@ -128,268 +128,288 @@ def TREMBA_attack(tremba_dict):
 
 #%%
 
-# def main(config):
+def main(config):
 
 #     config = json.load(open(opt["config"]))
 #     import os
 #     print(opt['gpuid'])
 #     os.environ['CUDA_VISIBLE_DEVICES'] = ','.join(str(opt['gpuid'])) if type(opt['gpuid']) is list else opt['gpuid']
 
-####################################### LOAD CONFIG #######################################################
-# Load the configurations
+    ####################################### LOAD CONFIG #######################################################
+    # Load the configurations
+
+    
+
+    #%%
+
+
+    video_path = config["video_path"]
+
+    video_name = config["video_name"]
+    conv_model = config["source_model"]
+    target_class = config["target"]
+
+    TREMBA_path = config["generator_path"]
+    # TREMBA_config = f"attack_target_{target_class}.json"
+
+    generator_name = config["generator_name"]
+
+    lower_frame = config["lower_frame"]
+    upper_frame = config["upper_frame"]
+
+    eps = config["epsilon"]
+
+
+    config["DIM"] = 224
+    #%%
+
+
+    # Append the extension to this depending on whether it is the npy arrays or if it is the video
+    save_path = f"{config['adv_save_path']}/{conv_model}_{target_class}_{video_name}"
+
+    csv_save_path = f"{save_path}_{config['epsilon']}_run_summary.csv"
+    run_done = Path(csv_save_path)
+    # if  run_done.is_file():
+    #     print(f"\nRun already found at {csv_save_path}, starting eval")
+    #     evaluate(config)
+
+    #%%
+
+    print("Loaded configs")
+
+    model_dict = {
+
+        "resnet152": models.resnet152(pretrained=True),
+        "densenet121": models.densenet121(pretrained=True),
+        # "densenet161": models.densenet161(pretrained=True),
+        "vgg16": models.vgg16(pretrained=True),
+        # "vgg19": models.vgg19_bn(pretrained=True),
+        # "inceptionv3": models.inception_v3(pretrained=True),
+        # "googlenet": models.googlenet(pretrained=True),
+        # "squeezenet": models.squeezenet1_1(pretrained=True),
+        # "mnasnet": models.mnasnet1_0(pretrained=True),
+        # "mobilenet_v2": models.mobilenet_v2(pretrained=True),
+        # "nasnetalarge": pmodels.nasnetalarge(num_classes=1000, pretrained='imagenet'),
+    }
+    #%%
+
+
+    ####################################### PRE-ATTACK CONFIGURATION ##############################################
+
+    frames = skvideo.io.vread(f"{video_path}/{video_name}")
+    print("Total frames: ", len(frames))
+
+    # Artificially limit the amount of frames
+    lower_frame = lower_frame
+    upper_frame = upper_frame  # len(frames)
+
+    frames = frames[lower_frame:upper_frame]
+
+    plt.imshow(frames[0])
+    #%%
+
+    conv = model_dict[conv_model]
+    conv.eval()
+
+
+    mean = np.array([0.485, 0.456, 0.406])
+    std = np.array([0.229, 0.224, 0.225])
+        
+    conv_model = nn.Sequential(
+            Normalize(mean, std),
+            conv
+        )
+
+    print("Got model")
+
+    #%%
+
+    tf_img_fn = TransformImage()#ptm_utils.TransformImage(conv)
+    load_img_fn = PIL.Image.fromarray
+
+    original = original_create_batches(frames_to_do=frames, batch_size=config["batch_size"], tf_img_fn=tf_img_fn,
+                                        load_img_fn=load_img_fn)
+
+    #%%
+
+    # Get the original predictions
+    with torch.no_grad():
+        original_output = conv(original[0]).cuda()#.to(device))
+        # print(original_output, original_output.shape)
+        print("Original classes: ")
+        for f in original_output:
+            print(" {} ".format(np.argmax(np.round(f.detach().cpu().numpy()))), end='')
+            
+    #%%
+    frames = torch.Tensor(frames).cuda().float()#.unsqueeze(0)
+
+    # try:
+    #     check= open(f"{TREMBA_path}/config/{TREMBA_config}")# as config_file
+    #     check.close()
+    # except:
+    #     import shutil
+    #     shutil.copy2(f"{TREMBA_path}/config/attack_target.json", f"{TREMBA_path}/config/{TREMBA_config}")
+            
+
+    # with open(f"{TREMBA_path}/config/{TREMBA_config}") as config_file:
+        # state = json.load(config_file)
+
+    nlabels = 1000
+
+    # eps = 0.03125
+    #         eps = 0.0625
+
+    # Load up the pretrained generator
+    generator_path = f"{config['generator_path']}/{config['generator_name']}"
+    weight = torch.load(generator_path)#.cuda()##, map_location=device)
+
+    print("Loaded generator")
+    #%%
+    # Get the encoder and decoder weights
+    encoder_weight = {}
+    decoder_weight = {}
+    for key, val in weight.items():
+        if key.startswith('0.'):
+            encoder_weight[key[2:]] = val
+        elif key.startswith('1.'):
+            decoder_weight[key[2:]] = val
+
+    encoder = Imagenet_Encoder()
+    decoder = Imagenet_Decoder()
+    encoder.load_state_dict(encoder_weight)
+    decoder.load_state_dict(decoder_weight)
+
+    encoder.cuda()##.to(device)
+    encoder.eval()
+    decoder.cuda()##.to(device)
+    decoder.eval()
+
+    print("Encoder, decoder loaded")
+    #%%
+
+    F = Function(conv, config['batch_size'], config['margin'], nlabels, config['target'])
+    F.cuda()
+
+    print("F function loaded")
+    #%%
+
+
+    if config['target']:
+        labels = config['target']
+    #         labels = torch.Tensor(np.array([labels])).cuda()
+    #function, encoder, decoder, image, label, config, latent=None
+    tremba_dict = {
+        "function": F,
+        "encoder": encoder,
+        "decoder": decoder,
+        "label": labels,
+
+        "config":config,
+        "latent":None,
+    }
+        
+    adversarial_images = []
+    adversarial_frames = []
+    #%%
+
+    ####################################### ATTACK #######################################################
+    pd_array = []
+
+    column_names = ["conv_model", "video_name", "epsilon", "frame_num", "target", "success", "average_count", "success_rate", "time"]
+    tic = time.time()
+    # Launching the attack over each frame
+    for f in range(len(frames)):
+        print("\n-------------------------------\nFrame number: ", f, end='\n')
+
+        image = (create_batches(frames[f].unsqueeze(0), config["DIM"]) / 255.)
+    #         image.cuda()##.to(device)
+
+        tremba_dict['image'] = image.squeeze(0).cuda()#[0].cuda()
+
+        adv_frames, success, stats, F.counts = TREMBA_attack(tremba_dict=tremba_dict)
+
+        adv_im = torch.clamp(image + adv_frames.unsqueeze(0), 0, 1)
+
+        adv_frames = detach(adv_frames.unsqueeze(0))
+        adversarial_images.append(detach(adv_im))
+        adversarial_frames.append(adv_frames)
+
+        row_array = [config["source_model"], video_name, config['epsilon'], f, target_class, stats["success"], stats["F_average_eval_count"], stats["success_rate"], ""]
+                        
+        pd_array.append(row_array)
+
+    print("Attack done")
+    toc=  time.time()
+
+    attack_time = toc-tic
+    time_row = [config["source_model"], video_name, config['epsilon'], f, target_class, stats["success"], stats["F_average_eval_count"], stats["success_rate"], attack_time]
+
+    pd_array.append(time_row)
+    print(f"Attack took: {toc-tic} seconds")
+    #%%
+    ####################################### POST-ATTACK ##################################################
+
+    adversarial_frames = np.concatenate(adversarial_frames, axis=0)
+    adversarial_images = np.concatenate(adversarial_images, axis=0)
+
+    # plt.imshow(torch.Tensor(adversarial_frames[0]).permute(1,2,0))
+    # plt.show()
+
+    #     plt.imshow(torch.Tensor(adversarial_images[0]).permute(1,2,0))
+    #     plt.show()
+    #%%
+    try:
+        import os
+        print("Creating save path: ", config["adv_save_path"])
+        os.makedirs(config["adv_save_path"])
+    except:
+        print("Save path already exists, skipping creation")
+    #%%
+
+    df = pd.DataFrame(pd_array, columns=column_names)
+    csv_save_path = f"{save_path}_{config['epsilon']}_run_summary.csv"
+    df.to_csv(csv_save_path, index=False)
+    print("Pandas results table saved at: ", csv_save_path)
+
+    np_save_path = f"{save_path}_{config['epsilon']}_perturbations.npy"
+    np.save(np_save_path, adversarial_frames * 255.)
+    print(f"Adversarial Perturbations Saved at: {np_save_path}")
+
+    np_save_path = f"{save_path}_{config['epsilon']}_adv_images.npy"
+    np.save(np_save_path, adversarial_images * 255.)
+    print(f"Adv. Images Saved at: {np_save_path}")
+
+    adv_save_path = f"{save_path}_{config['epsilon']}_adv_video.avi"
+    print(f"Writing adversarial video to: {adv_save_path}")
+    # Writing the adversarial frames to video
+    writer = skvideo.io.FFmpegWriter(adv_save_path, outputdict={
+        '-c:v': 'huffyuv',  # r210 huffyuv r10k
+    })
+
+    for f in adversarial_images:
+        writer.writeFrame(f * 255.)
+
+    writer.close()
+    print("Finished writing adversarial video.")
+
+# %%
 
 config_path = "configs/attack"
-config_name = os.listdir(config_path)[2]
-config_name = os.path.join(config_path, config_name)
-with open(config_name, 'r') as reader:
-    config = json.load(reader)
+for c in os.listdir(config_path):
+    config_name = os.path.join(config_path, c)
+    with open(config_name, 'r') as reader:
+        config = json.load(reader)
 
-#%%
-
-
-video_path = config["video_path"]
-
-video_name = config["video_name"]
-conv_model = config["source_model"]
-target_class = config["target"]
-
-TREMBA_path = config["generator_path"]
-# TREMBA_config = f"attack_target_{target_class}.json"
-
-generator_name = config["generator_name"]
-
-lower_frame = config["lower_frame"]
-upper_frame = config["upper_frame"]
-
-eps = config["epsilon"]
-
-config["DIM"] = 224
-#%%
-
-
-# Append the extension to this depending on whether it is the npy arrays or if it is the video
-save_path = f"{config['adv_save_path']}/{conv_model}_{target_class}_{video_name}"
-
-csv_save_path = f"{save_path}_{config['epsilon']}_run_summary.csv"
-run_done = Path(csv_save_path)
-# if  run_done.is_file():
-#     print(f"\nRun already found at {csv_save_path}, starting eval")
-#     evaluate(config)
-
-#%%
-
-print("Loaded configs")
-
-model_dict = {
-
-    "resnet152": models.resnet152(pretrained=True),
-    "densenet121": models.densenet121(pretrained=True),
-    # "densenet161": models.densenet161(pretrained=True),
-    "vgg16": models.vgg16(pretrained=True),
-    # "vgg19": models.vgg19_bn(pretrained=True),
-    # "inceptionv3": models.inception_v3(pretrained=True),
-    # "googlenet": models.googlenet(pretrained=True),
-    # "squeezenet": models.squeezenet1_1(pretrained=True),
-    # "mnasnet": models.mnasnet1_0(pretrained=True),
-    # "mobilenet_v2": models.mobilenet_v2(pretrained=True),
-    # "nasnetalarge": pmodels.nasnetalarge(num_classes=1000, pretrained='imagenet'),
-}
-#%%
-
-
-####################################### PRE-ATTACK CONFIGURATION ##############################################
-
-frames = skvideo.io.vread(f"{video_path}/{video_name}")
-print("Total frames: ", len(frames))
-
-# Artificially limit the amount of frames
-lower_frame = lower_frame
-upper_frame = upper_frame  # len(frames)
-
-frames = frames[lower_frame:upper_frame]
-#%%
-
-conv = model_dict[conv_model]
-conv.eval()
-
-
-mean = np.array([0.485, 0.456, 0.406])
-std = np.array([0.229, 0.224, 0.225])
-    
-conv_model = nn.Sequential(
-        Normalize(mean, std),
-        conv
-    )
-
-print("Got model")
-
-#%%
-
-tf_img_fn = TransformImage()#ptm_utils.TransformImage(conv)
-load_img_fn = PIL.Image.fromarray
-
-original = original_create_batches(frames_to_do=frames, batch_size=config["batch_size"], tf_img_fn=tf_img_fn,
-                                    load_img_fn=load_img_fn)
-
-#%%
-
-# Get the original predictions
-with torch.no_grad():
-    original_output = conv(original[0]).cuda()#.to(device))
-    # print(original_output, original_output.shape)
-    print("Original classes: ")
-    for f in original_output:
-        print(" {} ".format(np.argmax(np.round(f.detach().cpu().numpy()))), end='')
-        
-#%%
-frames = torch.Tensor(frames).cuda().float()#.unsqueeze(0)
-
-# try:
-#     check= open(f"{TREMBA_path}/config/{TREMBA_config}")# as config_file
-#     check.close()
-# except:
-#     import shutil
-#     shutil.copy2(f"{TREMBA_path}/config/attack_target.json", f"{TREMBA_path}/config/{TREMBA_config}")
-        
-
-# with open(f"{TREMBA_path}/config/{TREMBA_config}") as config_file:
-    # state = json.load(config_file)
-
-nlabels = 1000
-
-# eps = 0.03125
-#         eps = 0.0625
-
-# Load up the pretrained generator
-generator_path = f"{config['generator_path']}/{config['generator_name']}"
-weight = torch.load(generator_path)#.cuda()##, map_location=device)
-
-print("Loaded generator")
-#%%
-# Get the encoder and decoder weights
-encoder_weight = {}
-decoder_weight = {}
-for key, val in weight.items():
-    if key.startswith('0.'):
-        encoder_weight[key[2:]] = val
-    elif key.startswith('1.'):
-        decoder_weight[key[2:]] = val
-
-encoder = Imagenet_Encoder()
-decoder = Imagenet_Decoder()
-encoder.load_state_dict(encoder_weight)
-decoder.load_state_dict(decoder_weight)
-
-encoder.cuda()##.to(device)
-encoder.eval()
-decoder.cuda()##.to(device)
-decoder.eval()
-
-print("Encoder, decoder loaded")
-#%%
-
-F = Function(conv, config['batch_size'], config['margin'], nlabels, config['target'])
-F.cuda()
-
-print("F function loaded")
-#%%
-
-
-if config['target']:
-    labels = config['target']
-#         labels = torch.Tensor(np.array([labels])).cuda()
-#function, encoder, decoder, image, label, config, latent=None
-tremba_dict = {
-    "function": F,
-    "encoder": encoder,
-    "decoder": decoder,
-    "label": labels,
-
-    "config":config,
-    "latent":None,
-}
-    
-adversarial_images = []
-adversarial_frames = []
-#%%
-
-####################################### ATTACK #######################################################
-
-pd_array = []
-
-column_names = ["conv_model", "video_name", "epsilon", "frame_num", "target", "success", "average_count", "success_rate", "time"]
-tic = time.time()
-# Launching the attack over each frame
-for f in range(len(frames)):
-    print("\n-------------------------------\nFrame number: ", f, end='\n')
-
-    image = (create_batches(frames[f].unsqueeze(0), config["DIM"]) / 255.)
-#         image.cuda()##.to(device)
-
-    tremba_dict['image'] = image.squeeze(0).cuda()#[0].cuda()
-
-    adv_frames, success, stats, F.counts = TREMBA_attack(tremba_dict=tremba_dict)
-
-    adv_im = torch.clamp(image + adv_frames.unsqueeze(0), 0, 1)
-
-    adv_frames = detach(adv_frames.unsqueeze(0))
-    adversarial_images.append(detach(adv_im))
-    adversarial_frames.append(adv_frames)
-
-    row_array = [config["source_model"], video_name, config['epsilon'], f, target_class, stats["success"], stats["F_average_eval_count"], stats["success_rate"], ""]
-                    
-    pd_array.append(row_array)
+    main(config)
     break 
 
-print("Attack done")
-toc=  time.time()
-
-attack_time = toc-tic
-time_row = [config["source_model"], video_name, config['epsilon'], f, target_class, stats["success"], stats["F_average_eval_count"], stats["success_rate"], attack_time]
-
-pd_array.append(time_row)
-print(f"Attack took: {toc-tic} seconds")
 #%%
-####################################### POST-ATTACK ##################################################
+if __name__ == '__main__':
 
-adversarial_frames = np.concatenate(adversarial_frames, axis=0)
-adversarial_images = np.concatenate(adversarial_images, axis=0)
-
-#     plt.imshow(torch.Tensor(adversarial_frames[0]).permute(1,2,0))
-#     plt.show()
-
-#     plt.imshow(torch.Tensor(adversarial_images[0]).permute(1,2,0))
-#     plt.show()
+    config_path = "configs/attack"
+    config_name = os.listdir(config_path)[2]
+    config_name = os.path.join(config_path, config_name)
+    with open(config_name, 'r') as reader:
+        config = json.load(reader)
     
-try:
-    import os
-    print("Creating save path: ", config["adv_save_path"])
-    os.makedirs(config["adv_save_path"])
-except:
-    print("Save path already exists, skipping creation")
-
-df = pd.DataFrame(pd_array, columns=column_names)
-csv_save_path = f"{save_path}_{config['epsilon']}_run_summary.csv"
-df.to_csv(csv_save_path, index=False)
-print("Pandas results table saved at: ", csv_save_path)
-
-np_save_path = f"{save_path}_{config['epsilon']}_perturbations.npy"
-np.save(np_save_path, adversarial_frames * 255.)
-print(f"Adversarial Perturbations Saved at: {np_save_path}")
-
-np_save_path = f"{save_path}_{config['epsilon']}_adv_images.npy"
-np.save(np_save_path, adversarial_images * 255.)
-print(f"Adv. Images Saved at: {np_save_path}")
-
-adv_save_path = f"{save_path}_{config['epsilon']}_adv_video.avi"
-print(f"Writing adversarial video to: {adv_save_path}")
-# Writing the adversarial frames to video
-writer = skvideo.io.FFmpegWriter(adv_save_path, outputdict={
-    '-c:v': 'huffyuv',  # r210 huffyuv r10k
-})
-
-for f in adversarial_images:
-    writer.writeFrame(f * 255.)
-
-writer.close()
-print("Finished writing adversarial video.")
+    main(config)

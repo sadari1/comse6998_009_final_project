@@ -37,7 +37,7 @@
     "upper_frame": 100,
     "DIM": 224, 
 
-    "adv_save_path": ""
+    "adv_save_path": "data/adversarial_videos"
     
 
 
