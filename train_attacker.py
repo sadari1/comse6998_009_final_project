@@ -28,17 +28,3 @@ for c in configs[:1]:
     train_tremba(train_config)
     break 
 # %%
-
-# asdf = train_tremba(train_config)
-# %%
-
-#%%
-for idx, a in enumerate(asdf):
-    print(idx)
-
-    data = a[0]
-    labels = a[1]
-    print(data)
-    print(labels)
-    break 
-# %%
