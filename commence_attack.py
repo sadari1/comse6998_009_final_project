@@ -169,9 +169,9 @@ def main(config):
 
     csv_save_path = f"{save_path}_{config['epsilon']}_run_summary.csv"
     run_done = Path(csv_save_path)
-    # if  run_done.is_file():
-    #     print(f"\nRun already found at {csv_save_path}, starting eval")
-    #     evaluate(config)
+    if run_done.is_file():
+        print(f"\nRun already found at {csv_save_path}, skipping")
+        return  
 
     #%%
 
@@ -401,7 +401,6 @@ for c in os.listdir(config_path):
         config = json.load(reader)
 
     main(config)
-    break 
 
 #%%
 if __name__ == '__main__':
