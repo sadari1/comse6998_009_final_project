@@ -223,25 +223,16 @@ def evaluate(config):
     eval_results_df.to_csv(csv_save_path, index=False)
     print("Pandas results table saved at: ", csv_save_path)
 
-# %%
-
-config_path = "configs/eval"
-for c in os.listdir(config_path):
-    config_name = os.path.join(config_path, c)
-    with open(config_name, 'r') as reader:
-        config = json.load(reader)
-
-    evaluate(config)
-    break 
 
 #%%
 
 if __name__ == '__main__':
 
     config_path = "configs/eval"
-    # config_name = os.listdir(config_path)[2]
-    config_name = os.path.join(config_path, config_name)
-    with open(config_name, 'r') as reader:
-        config = json.load(reader)
-    
-    main(config)
+    for c in os.listdir(config_path):
+        config_name = os.path.join(config_path, c)
+        with open(config_name, 'r') as reader:
+            config = json.load(reader)
+
+        evaluate(config)
+        break 

@@ -392,23 +392,14 @@ def main(config):
     writer.close()
     print("Finished writing adversarial video.")
 
-# %%
-
-config_path = "configs/attack"
-for c in os.listdir(config_path):
-    config_name = os.path.join(config_path, c)
-    with open(config_name, 'r') as reader:
-        config = json.load(reader)
-
-    main(config)
 
 #%%
 if __name__ == '__main__':
 
     config_path = "configs/attack"
-    # config_name = os.listdir(config_path)[2]
-    config_name = os.path.join(config_path, config_name)
-    with open(config_name, 'r') as reader:
-        config = json.load(reader)
-    
-    main(config)
+    for c in os.listdir(config_path):
+        config_name = os.path.join(config_path, c)
+        with open(config_name, 'r') as reader:
+            config = json.load(reader)
+
+        main(config)

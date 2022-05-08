@@ -94,5 +94,4 @@ for r in results:
     save_path = r[:-4] + "_scored.csv"
     df.to_csv(save_path, index=False)
 
-    break 
 # %%
