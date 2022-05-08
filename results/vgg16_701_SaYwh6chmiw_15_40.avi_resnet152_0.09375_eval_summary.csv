@@ -1,2 +1,2 @@
 video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
-SaYwh6chmiw_15_40.avi,vgg16,resnet152,0.09375,A train is moving down the track,701,A <UNK> is performing a dance,A man is walking with a rope
+SaYwh6chmiw_15_40.avi,vgg16,resnet152,0.09375,A train is moving down the track,701,A <UNK> is performing on a <UNK>,A man is walking on a rope

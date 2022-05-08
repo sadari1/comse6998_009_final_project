@@ -30,6 +30,7 @@ if name.endswith("eval_summary.csv")]
 #### Determine all combinations of conv and eval models
 conv_models = []
 eval_models = []
+epsilons = []
 for r in results:
     if '/' in r:
         base_name = r.split("/")[1]
@@ -38,25 +39,31 @@ for r in results:
     
     conv_model = base_name.split("_")[0]
     eval_model = base_name.split(".")[1].split("_")[1]
-
+    epsilon = base_name.split("_eval")[0].split("_")[-1]
+    
     if conv_model not in conv_models:
         conv_models.append(conv_model)
     
     if eval_model not in eval_models:
         eval_models.append(eval_model)
+    
+    if epsilon not in epsilons:
+        epsilons.append(epsilon)
+        
 #%%
 
 # Filter by combination and concat the results 
-combinations = list(product(conv_models, eval_models))
+combinations = list(product(conv_models, eval_models, epsilons))
 
 for c in combinations:
     conv_model = c[0]
     eval_model = c[1]
+    epsilon = c[2]
 
     filter_statement = lambda x: conv_model in x and eval_model in x 
 
     filt = list(filter(filter_statement, results))
-    combined_result_path = f"{root_path}/{conv_model}_{eval_model}_results.csv"
+    combined_result_path = f"{root_path}/{conv_model}_{eval_model}_{epsilon}results.csv"
     
     dataframes = [pd.read_csv(f) for f in filt]
     concatenated = pd.concat(dataframes)

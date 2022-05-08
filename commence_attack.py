@@ -408,8 +408,9 @@ if __name__ == '__main__':
             config = json.load(reader)
         # if config['target'] == 701:
         #     continue
+        if config['epsilon'] == 0.0625:
+            config['epsilon'] += 0.03125  
         if config['epsilon'] == 0.03125:
             config['epsilon'] *= 2
-        if config['epsilon'] == 0.0625:
-            config['epsilon'] += 0.03125   
+ 
         main(config)

@@ -239,8 +239,12 @@ if __name__ == '__main__':
         with open(config_name, 'r') as reader:
             config = json.load(reader)
         
+        if config['epsilon'] == 0.0625:
+            config['epsilon'] += 0.03125  
         if config['epsilon'] == 0.03125:
             config['epsilon'] *= 2
-        if config['epsilon'] == 0.0625:
-            config['epsilon'] += 0.03125
+        
+        if config['epsilon'] == 0.09375:
+            continue 
+            
         evaluate(config)
