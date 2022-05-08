@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+AJJ-iQkbRNE_97_109.avi,vgg16,vgg16,0.0625,A person is slicing a piece of bread,566,A man is playing with a microphone,A man is playing a guitar

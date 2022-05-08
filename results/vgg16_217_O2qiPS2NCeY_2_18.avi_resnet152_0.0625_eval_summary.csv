@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+O2qiPS2NCeY_2_18.avi,vgg16,resnet152,0.0625,A bird is eating a piece of food,217,A man is playing with a large monkey,A <UNK> is playing with a baby

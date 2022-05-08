@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+YEmS8ZQIhTA_7_20.avi,vgg16,resnet152,0.0625,A man is scoring a basketball,217,A group of monkeys are talking,A <UNK> ARE PLAYING ON THE BED

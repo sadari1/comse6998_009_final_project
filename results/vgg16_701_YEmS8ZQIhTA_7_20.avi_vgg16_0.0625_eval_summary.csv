@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+YEmS8ZQIhTA_7_20.avi,vgg16,vgg16,0.0625,A man is scoring a basketball,701,A woman is dancing,A man is <UNK> by a woman

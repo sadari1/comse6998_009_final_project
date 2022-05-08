@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+SaYwh6chmiw_15_40.avi,vgg16,vgg16,0.0625,A train is going to a stop,217,A dog is looking at a counter,A cat is playing with a ball

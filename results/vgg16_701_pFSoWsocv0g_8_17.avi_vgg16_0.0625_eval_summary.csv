@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+pFSoWsocv0g_8_17.avi,vgg16,vgg16,0.0625,A dog is playing with a toy,701,A man is jumping from a rope,A man is <UNK> and <UNK> a fish

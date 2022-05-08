@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+SaYwh6chmiw_15_40.avi,vgg16,resnet152,0.0625,A train is moving down the tracks,217,A <UNK> <UNK> <UNK>,A <UNK> is <UNK> by a child

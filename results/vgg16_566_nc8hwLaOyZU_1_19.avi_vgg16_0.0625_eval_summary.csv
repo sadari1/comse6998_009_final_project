@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+nc8hwLaOyZU_1_19.avi,vgg16,vgg16,0.0625,A girl is riding a bike,566,A young boy is playing with a ball,A man is holding a small ball of the cage

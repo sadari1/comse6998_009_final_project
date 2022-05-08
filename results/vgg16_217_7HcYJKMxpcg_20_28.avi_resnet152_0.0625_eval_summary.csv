@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+7HcYJKMxpcg_20_28.avi,vgg16,resnet152,0.0625,A lion is walking in the grass,217,A <UNK> is playing with a <UNK>,A lion is walking

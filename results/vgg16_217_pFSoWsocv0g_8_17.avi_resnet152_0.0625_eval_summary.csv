@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+pFSoWsocv0g_8_17.avi,vgg16,resnet152,0.0625,A dog is playing with a puppy,217,A man is seeing the baby,A dog is walking on a sofa

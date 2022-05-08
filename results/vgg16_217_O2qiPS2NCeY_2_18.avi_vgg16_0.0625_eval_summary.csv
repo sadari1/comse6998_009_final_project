@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+O2qiPS2NCeY_2_18.avi,vgg16,vgg16,0.0625,A bird is eating,217,A dog is looking at a dead,A dog is looking at a baby

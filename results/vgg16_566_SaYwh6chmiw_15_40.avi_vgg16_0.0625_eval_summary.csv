@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+SaYwh6chmiw_15_40.avi,vgg16,vgg16,0.0625,A train is going to a stop,566,A man is playing with a small ball,A man is pushing a woman

@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+AJJ-iQkbRNE_97_109.avi,vgg16,resnet152,0.0625,A man is cutting a pineapple,217,A man is sitting up a bed,A man is playing with the <UNK>

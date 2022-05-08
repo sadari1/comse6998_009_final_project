@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+pFSoWsocv0g_8_17.avi,vgg16,vgg16,0.0625,A dog is eating a piece of food,217,A dog is looking at a <UNK>,A dog is barking
