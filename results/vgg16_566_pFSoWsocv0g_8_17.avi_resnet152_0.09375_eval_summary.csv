@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+pFSoWsocv0g_8_17.avi,vgg16,resnet152,0.09375,Two puppies are playing,566,A man is playing a basketball,A man is dancing

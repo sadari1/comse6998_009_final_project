@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+nc8hwLaOyZU_1_19.avi,vgg16,resnet152,0.09375,A man is riding a bicycle,566,A man is playing a trumpet,A man is dancing

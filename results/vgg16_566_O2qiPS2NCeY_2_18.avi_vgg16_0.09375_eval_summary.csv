@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+O2qiPS2NCeY_2_18.avi,vgg16,vgg16,0.09375,A bird is eating a bird,566,A man is playing with a dead,A woman is putting milk on a grill

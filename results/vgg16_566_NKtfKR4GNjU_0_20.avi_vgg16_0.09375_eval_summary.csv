@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+NKtfKR4GNjU_0_20.avi,vgg16,vgg16,0.09375,A man is kicking a ball,566,A man and woman are dancing,A man is dancing

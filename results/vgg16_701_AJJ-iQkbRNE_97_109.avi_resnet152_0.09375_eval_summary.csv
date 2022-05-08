@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+AJJ-iQkbRNE_97_109.avi,vgg16,resnet152,0.09375,A man is cutting a pineapple,701,A small girl is playing with a toy,A man is playing with a toy

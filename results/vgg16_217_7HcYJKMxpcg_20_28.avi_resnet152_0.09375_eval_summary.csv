@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+7HcYJKMxpcg_20_28.avi,vgg16,resnet152,0.09375,A lion is walking in the ground,217,A <UNK> is playing with the <UNK>,A man is walking on a tree

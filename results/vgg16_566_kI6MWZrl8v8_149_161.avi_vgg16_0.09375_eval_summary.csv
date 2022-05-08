@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+kI6MWZrl8v8_149_161.avi,vgg16,vgg16,0.09375,A man is playing the guitar and singing,566,A man is playing with a small boy,A man is dancing

@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+YEmS8ZQIhTA_7_20.avi,vgg16,vgg16,0.09375,A man is doing a trick,701,A girl is riding a huge <UNK>,A man is walking on a rope

@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+77iDIp40m9E_159_181.avi,vgg16,resnet152,0.09375,A man is fighting with a monkey,701,A <UNK> is performing a <UNK>,A man is walking on a rope

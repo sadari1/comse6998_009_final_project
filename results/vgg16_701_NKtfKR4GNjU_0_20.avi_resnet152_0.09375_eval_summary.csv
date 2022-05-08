@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+NKtfKR4GNjU_0_20.avi,vgg16,resnet152,0.09375,A man is throwing a ball,701,A man is playing with a toy,A man is performing a dance

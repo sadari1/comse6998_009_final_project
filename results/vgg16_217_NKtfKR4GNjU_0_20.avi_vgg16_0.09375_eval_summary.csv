@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+NKtfKR4GNjU_0_20.avi,vgg16,vgg16,0.09375,A man is throwing a ball into the air,217,A <UNK> and a tiger are walking,A man is <UNK> a woman

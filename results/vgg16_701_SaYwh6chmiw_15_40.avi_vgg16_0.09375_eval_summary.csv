@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+SaYwh6chmiw_15_40.avi,vgg16,vgg16,0.09375,A train is going to a stop,701,A man is jumping on a rope,A man and a woman are dancing

@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+7HcYJKMxpcg_20_28.avi,vgg16,vgg16,0.09375,A lion is walking around a pen,217,A tiger and a tiger are walking around,A turtle is walking

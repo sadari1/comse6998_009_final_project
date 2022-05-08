@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+MSrJTeKNzdI_32_36.avi,vgg16,vgg16,0.09375,A man is skiing,701,A man is dancing,A man is riding a <UNK>

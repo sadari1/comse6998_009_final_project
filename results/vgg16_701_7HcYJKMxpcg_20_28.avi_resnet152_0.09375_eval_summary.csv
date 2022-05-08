@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+7HcYJKMxpcg_20_28.avi,vgg16,resnet152,0.09375,A lion is walking in the grass,701,A <UNK> is playing with a ball,A man is walking with a deer

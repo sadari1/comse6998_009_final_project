@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+SaYwh6chmiw_15_40.avi,vgg16,vgg16,0.09375,A train is going down a track,566,A little boy is playing with a ball,A man is putting on a <UNK> on the ground

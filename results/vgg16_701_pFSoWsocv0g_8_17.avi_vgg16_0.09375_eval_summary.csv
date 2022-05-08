@@ -1,0 +1,2 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video
+pFSoWsocv0g_8_17.avi,vgg16,vgg16,0.09375,A dog is eating a piece of food,701,A man is jumping on a rope,A man is jumping on a rope

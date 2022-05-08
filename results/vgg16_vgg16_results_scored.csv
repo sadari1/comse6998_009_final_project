@@ -1,0 +1,67 @@
+video_name,source_model,eval_model,epsilon,original_caption,target,adversarial_caption_np,adversarial_caption_video,score,success
+pFSoWsocv0g_8_17.avi,vgg16,vgg16,0.09375,A dog is eating a piece of food,parachute,A man is jumping on a rope,A man is jumping on a rope,0.5443889,1
+7HcYJKMxpcg_20_28.avi,vgg16,resnet152,0.09375,A lion is walking in the ground,dog,A <UNK> is playing with the <UNK>,A man is walking on a tree,0.17558973,0
+kI6MWZrl8v8_149_161.avi,vgg16,resnet152,0.09375,A man is playing a guitar and singing,parachute,A woman is holding a <UNK>,A man is holding a monkey,0.2761681,0
+kI6MWZrl8v8_149_161.avi,vgg16,vgg16,0.09375,A man is playing a guitar and singing,parachute,A man is dancing,A man is performing a song on a man,0.34087697,1
+SaYwh6chmiw_15_40.avi,vgg16,resnet152,0.09375,A train is moving down the tracks,dog,A <UNK> is dancing in the cage,A <UNK> is <UNK> by a mirror,0.29740497,0
+AJJ-iQkbRNE_97_109.avi,vgg16,vgg16,0.09375,A man is slicing a pineapple,horn,A person is playing with a microphone,A man is playing a trumpet,0.41927132,1
+O2qiPS2NCeY_2_18.avi,vgg16,vgg16,0.09375,A bird is eating a piece of food,parachute,A man is dancing,A man and a woman are dancing,0.34087697,1
+77iDIp40m9E_159_181.avi,vgg16,vgg16,0.09375,A monkey is doing karate,dog,A dog is barking,A dog is barking,0.72157586,1
+pFSoWsocv0g_8_17.avi,vgg16,resnet152,0.09375,A dog is playing with a puppy,parachute,A man is doing a dance,A small child is walking on a rope,0.34642622,1
+O2qiPS2NCeY_2_18.avi,vgg16,resnet152,0.09375,A bird is eating from a bowl,parachute,A group of people are dancing,A <UNK> is playing with a ball,0.34505185,1
+AJJ-iQkbRNE_97_109.avi,vgg16,vgg16,0.09375,A man is slicing a pineapple,parachute,A man is dancing,A man and a woman are riding on a <UNK>,0.34087694,1
+pFSoWsocv0g_8_17.avi,vgg16,resnet152,0.09375,Two puppies are playing,horn,A man is playing a basketball,A man is dancing,0.36346346,1
+MSrJTeKNzdI_32_36.avi,vgg16,vgg16,0.09375,A man is skiing,parachute,A man is dancing,A man is riding a <UNK>,0.34087694,1
+77iDIp40m9E_159_181.avi,vgg16,vgg16,0.09375,A monkey is doing karate,horn,A woman is playing with a man,A man is playing a guitar,0.34478393,1
+pFSoWsocv0g_8_17.avi,vgg16,resnet152,0.09375,A dog is playing with a puppy,dog,A man is sitting in a chair,A dog is sitting in a line and the scene flashes to get up,0.37070137,1
+kI6MWZrl8v8_149_161.avi,vgg16,resnet152,0.09375,A man is playing a guitar and singing,horn,A man is playing with a ball,A man is playing with a woman,0.36580628,1
+YEmS8ZQIhTA_7_20.avi,vgg16,resnet152,0.09375,A man is playing a basketball game,parachute,A woman is performing a <UNK> dance,A man is doing a <UNK>,0.29038274,0
+O2qiPS2NCeY_2_18.avi,vgg16,resnet152,0.09375,A bird is eating from a bowl,dog,A man is playing with a toy,A <UNK> is playing with the <UNK>,0.39720413,1
+NKtfKR4GNjU_0_20.avi,vgg16,vgg16,0.09375,A man is throwing a ball into a hoop,parachute,A man is kicking a soccer ball,A group of people are doing a <UNK>,0.38294214,1
+nc8hwLaOyZU_1_19.avi,vgg16,resnet152,0.09375,A monkey is riding a bicycle,parachute,People are dancing,A man is walking with a monkey,0.34548542,1
+SaYwh6chmiw_15_40.avi,vgg16,resnet152,0.09375,A train is moving down the track,parachute,A <UNK> is performing a dance,A man is walking with a rope,0.3383176,1
+77iDIp40m9E_159_181.avi,vgg16,resnet152,0.09375,A man is fighting with a monkey,parachute,A <UNK> is performing a <UNK>,A man is walking on a rope,0.22433823,0
+MSrJTeKNzdI_32_36.avi,vgg16,resnet152,0.09375,A man is skiing down a hill,dog,A man is sitting on the floor,A cat is playing,0.4189595,1
+nc8hwLaOyZU_1_19.avi,vgg16,vgg16,0.09375,A man is riding a bike,dog,A group of people are dancing,A dog is walking around a room,0.33421683,1
+AJJ-iQkbRNE_97_109.avi,vgg16,resnet152,0.09375,A man is cutting a pineapple,horn,A man is playing a trumpet,A man is playing with a white ball,0.54645175,1
+kI6MWZrl8v8_149_161.avi,vgg16,vgg16,0.09375,A man is playing the guitar and singing,horn,A man is playing with a small boy,A man is dancing,0.35414982,1
+SaYwh6chmiw_15_40.avi,vgg16,vgg16,0.09375,A train is coming down a track,dog,A dog is looking at a <UNK>,A dog is playing with a ball,0.62893873,1
+AJJ-iQkbRNE_97_109.avi,vgg16,resnet152,0.09375,A man is cutting a pineapple,parachute,A small girl is playing with a toy,A man is playing with a toy,0.32824263,1
+O2qiPS2NCeY_2_18.avi,vgg16,vgg16,0.09375,A bird is eating from a bowl,dog,A dog and a woman are dancing,A dog is walking,0.66592133,1
+7HcYJKMxpcg_20_28.avi,vgg16,resnet152,0.09375,A lion is walking in the grass,horn,A man is playing with a <UNK>,A man is throwing a small animal,0.3338527,1
+YEmS8ZQIhTA_7_20.avi,vgg16,resnet152,0.09375,A man is scoring a basketball,horn,A man is playing with a blue toy,A man is playing with a <UNK>,0.32844254,1
+7HcYJKMxpcg_20_28.avi,vgg16,vgg16,0.09375,A lion is walking around a pen,dog,A tiger and a tiger are walking around,A turtle is walking,0.47710556,1
+MSrJTeKNzdI_32_36.avi,vgg16,resnet152,0.09375,A man is skiing down a hill,parachute,A <UNK> is performing a <UNK>,A man is walking on a horse,0.22433823,0
+SaYwh6chmiw_15_40.avi,vgg16,resnet152,0.09375,A train is moving down the tracks,horn,A man is playing with a cat,A <UNK> is dancing,0.30828875,1
+YEmS8ZQIhTA_7_20.avi,vgg16,resnet152,0.09375,A man is throwing a basketball into a hoop,dog,A man is dancing,A dog is sitting on the ground,0.36880127,1
+O2qiPS2NCeY_2_18.avi,vgg16,resnet152,0.09375,A bird is eating a piece of food,horn,A man is playing with a toy,A <UNK> is playing with <UNK>,0.4048786,1
+MSrJTeKNzdI_32_36.avi,vgg16,vgg16,0.09375,A man is riding a horse,horn,A man is holding a small rat in a room,A man and a woman are dancing,0.31355542,1
+NKtfKR4GNjU_0_20.avi,vgg16,resnet152,0.09375,A man is throwing a ball,parachute,A man is playing with a toy,A man is performing a dance,0.30252075,1
+nc8hwLaOyZU_1_19.avi,vgg16,vgg16,0.09375,A man is riding a bike,horn,A group of young man is playing with a ball,A man is making a large <UNK>,0.3802036,1
+NKtfKR4GNjU_0_20.avi,vgg16,vgg16,0.09375,A man is kicking a ball,horn,A man and woman are dancing,A man is dancing,0.31235978,1
+O2qiPS2NCeY_2_18.avi,vgg16,vgg16,0.09375,A bird is eating a bird,horn,A man is playing with a dead,A woman is putting milk on a grill,0.3151819,1
+nc8hwLaOyZU_1_19.avi,vgg16,resnet152,0.09375,A man is riding a bicycle,dog,A man is sitting in a chair,A man is dancing,0.3707013,1
+NKtfKR4GNjU_0_20.avi,vgg16,resnet152,0.09375,A boy is playing baseball,dog,A dog is walking on a fence,A <UNK> is dancing,0.70619774,1
+7HcYJKMxpcg_20_28.avi,vgg16,vgg16,0.09375,A lion is walking around a pen,horn,A man is dancing,A group of people are getting down a street,0.3422854,1
+kI6MWZrl8v8_149_161.avi,vgg16,resnet152,0.09375,A man is playing a guitar and singing,dog,A <UNK> <UNK> <UNK>,A monkey is playing with a monkey,0.17182888,0
+NKtfKR4GNjU_0_20.avi,vgg16,vgg16,0.09375,A man is throwing a ball into the air,dog,A <UNK> and a tiger are walking,A man is <UNK> a woman,0.44280794,1
+pFSoWsocv0g_8_17.avi,vgg16,vgg16,0.09375,A dog is playing with a dog,dog,A dog is sniffing a large store,A dog is barking,0.63317996,1
+nc8hwLaOyZU_1_19.avi,vgg16,resnet152,0.09375,A man is riding a bicycle,horn,A man is playing a trumpet,A man is dancing,0.54645175,1
+NKtfKR4GNjU_0_20.avi,vgg16,resnet152,0.09375,A man is hitting a baseball,horn,A man is playing a <UNK>,A man is playing with a ball,0.32340723,1
+nc8hwLaOyZU_1_19.avi,vgg16,vgg16,0.09375,A man is riding a bike,parachute,A man is dancing,A man and woman are dancing,0.34087694,1
+kI6MWZrl8v8_149_161.avi,vgg16,vgg16,0.09375,A man is playing a guitar,dog,A dog is looking at a <UNK>,A dog is playing,0.62893873,1
+7HcYJKMxpcg_20_28.avi,vgg16,vgg16,0.09375,A lion is walking around a pen,parachute,A man and a woman are walking in a field,A man is riding a mountain,0.314663,1
+77iDIp40m9E_159_181.avi,vgg16,resnet152,0.09375,A chimpanzee is doing karate moves,horn,A man is playing a ball,A man is playing with a large animal,0.36144146,1
+MSrJTeKNzdI_32_36.avi,vgg16,vgg16,0.09375,A man is riding a horse,dog,A dog is sniffing and sniffing,A man is running from the ground,0.6428269,1
+YEmS8ZQIhTA_7_20.avi,vgg16,vgg16,0.09375,Two teams are playing basketball,dog,A dog is looking in a room,A dog is playing,0.68239444,1
+MSrJTeKNzdI_32_36.avi,vgg16,resnet152,0.09375,A man is skiing,horn,A man is playing a game,A man is playing with a girl,0.31705827,1
+77iDIp40m9E_159_181.avi,vgg16,vgg16,0.09375,A monkey is doing karate,parachute,A man is jumping on a rope,A man is riding a horse,0.5443889,1
+YEmS8ZQIhTA_7_20.avi,vgg16,vgg16,0.09375,A man is doing a trick,parachute,A girl is riding a huge <UNK>,A man is walking on a rope,0.36156756,1
+pFSoWsocv0g_8_17.avi,vgg16,vgg16,0.09375,A dog is eating something,horn,A man is playing with a ball,A man is playing with a <UNK>,0.36580625,1
+AJJ-iQkbRNE_97_109.avi,vgg16,resnet152,0.09375,A man is cutting a pineapple,dog,A man is playing with a large woman,A man is walking up the stairs,0.34129038,1
+SaYwh6chmiw_15_40.avi,vgg16,vgg16,0.09375,A train is going down a track,horn,A little boy is playing with a ball,A man is putting on a <UNK> on the ground,0.3919085,1
+SaYwh6chmiw_15_40.avi,vgg16,vgg16,0.09375,A train is going to a stop,parachute,A man is jumping on a rope,A man and a woman are dancing,0.5443889,1
+77iDIp40m9E_159_181.avi,vgg16,resnet152,0.09375,A chimpanzee is performing karate moves,dog,A man is sitting on a bed,A dog is sitting on a sofa,0.4133974,1
+AJJ-iQkbRNE_97_109.avi,vgg16,vgg16,0.09375,A woman is slicing a pineapple,dog,A dog is barking,A dog is walking,0.72157586,1
+YEmS8ZQIhTA_7_20.avi,vgg16,vgg16,0.09375,A man is doing a trick,horn,A man is playing with a small boy,A person is talking to a giant bird,0.35414982,1
+7HcYJKMxpcg_20_28.avi,vgg16,resnet152,0.09375,A lion is walking in the grass,parachute,A <UNK> is playing with a ball,A man is walking with a deer,0.31354746,1
