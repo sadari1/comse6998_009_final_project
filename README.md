@@ -23,6 +23,11 @@ that the CNN can be exploited to semantically influence the target caption.
 
 Here, we contain all the code needed to perform the experiments and plot results.
 
+The basic attack framework is depicted by the following diagram:
+
+ ![vshla_diagram]( vshla_framework.png "Modular VSHLA Framework")
+
+
 # Repository Guide:
 
 ### configs/
@@ -109,19 +114,28 @@ Adversarial results should show up under data/adversarial videos
 
 Table of Results - Epsilon = 0.0625
 
-| Syntax      | Description |
-| ----------- | ----------- |
-| Header      | Title       |
-| Paragraph   | Text        |
+| Source CNN |  Eval CNN   | Epsilon   | Target Class           | Success Rate |  
+| -----------| ----------- | --------- | ---------------------  | -----------  |
+| VGG16      | VGG16       | 0.0625    | 217 (English Springer) |  0.818       | 
+| VGG16      | Resnet152   | 0.0625    | 217 (English Springer) |  0.091       | 
+| VGG16      | VGG16       | 0.0625    | 566 (French Horn)      |  0.091       | 
+| VGG16      | Resnet152   | 0.0625    | 566 (French Horn)      |  0.091       | 
+| VGG16      | VGG16       | 0.0625    | 701 (Parachute)        |  0.273       | 
+| VGG16      | Resnet152   | 0.0625    | 701 (Parachute)        |  0.000       | 
+
 
 
 Table of Results - Epsilon = 0.09375
 
-| Syntax      | Description |
-| ----------- | ----------- |
-| Header      | Title       |
-| Paragraph   | Text        |
 
+| Source CNN |  Eval CNN   | Epsilon   | Target Class           | Success Rate |  
+| -----------| ----------- | --------- | ---------------------  | -----------  |
+| VGG16      | VGG16       | 0.09375    | 217 (English Springer) |  0.727       | 
+| VGG16      | Resnet152   | 0.09375    | 217 (English Springer) |  0.091       | 
+| VGG16      | VGG16       | 0.09375    | 566 (French Horn)      |  0.000       | 
+| VGG16      | Resnet152   | 0.09375    | 566 (French Horn)      |  0.182       | 
+| VGG16      | VGG16       | 0.09375    | 701 (Parachute)        |  0.272       | 
+| VGG16      | Resnet152   | 0.09375    | 701 (Parachute)        |  0.000       | 
 
 Effect of Epsilon:
 
