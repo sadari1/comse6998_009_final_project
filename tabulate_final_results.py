@@ -19,12 +19,13 @@ for r in results:
 fulldf = pd.concat(dfs)
 # %%
 result_df_rows = []
-for name, group in fulldf.groupby(['source_model', 'eval_model', 'epsilon']):
+for name, group in fulldf.groupby(['source_model', 'eval_model', 'epsilon', 'target']):
     success_rate = group['success'].mean()
 
     row = [*name, success_rate]
     result_df_rows.append(row)
-result_df = pd.DataFrame(result_df_rows, columns=['source_model', 'eval_model', 'epsilon', 'success_rate'])
+
+result_df = pd.DataFrame(result_df_rows, columns=['source_model', 'eval_model', 'epsilon', 'target', 'success_rate'])
 # %%
 result_df.to_csv("results/final_results.csv", index=False)
 # %%
